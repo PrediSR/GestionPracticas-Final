@@ -1,0 +1,4 @@
+.elemento-menu:hover {
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
