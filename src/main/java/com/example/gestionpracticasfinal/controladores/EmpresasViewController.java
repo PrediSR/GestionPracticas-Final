@@ -1,7 +1,6 @@
 package com.example.gestionpracticasfinal.controladores;
 
 import com.example.gestionpracticasfinal.MainApplication;
-import com.example.gestionpracticasfinal.modelos.Alumno;
 import com.example.gestionpracticasfinal.modelos.DatosTabla;
 import com.example.gestionpracticasfinal.modelos.Empresa;
 import javafx.collections.FXCollections;
@@ -14,12 +13,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class EmpresasViewController implements Initializable {
+    @FXML private AnchorPane root;
     @FXML private TableView<DatosTabla> tabEmpresas;
     @FXML private TableColumn<DatosTabla, String> colCodigo;
     @FXML private TableColumn<DatosTabla, String> colNombre;
@@ -27,15 +28,20 @@ public class EmpresasViewController implements Initializable {
     @FXML private TableColumn<DatosTabla, String> colModifica;
     @FXML private TableColumn<DatosTabla, String> colElimina;
 
-    public void OnClickChangeToAlumnos(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("alumnos-view.fxml"));
-            Stage stage = (Stage) tabEmpresas.getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 920, 595);
-            stage.setScene(scene);
-        }catch (Exception e) {
+    public void onClickChangeToAlumnos(MouseEvent event) throws Exception {
+        Stage stage = (Stage) root.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(
+                "alumnos-view.fxml"));
+        Scene scene =new Scene(loader.load());
+        stage.setScene(scene);
+    }
 
-        }
+    public void onClickChangeToExportCiclo(MouseEvent event) throws Exception {
+        Stage stage = (Stage) root.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(
+                "exportciclo-view.fxml"));
+        Scene scene =new Scene(loader.load());
+        stage.setScene(scene);
     }
 
     @Override
@@ -58,6 +64,7 @@ public class EmpresasViewController implements Initializable {
     }
 
     private ObservableList<DatosTabla> getEmpresas() throws Exception {
+        tabEmpresas.getItems().clear();
         ObservableList<DatosTabla> output = FXCollections.observableArrayList();
         Empresa[] lista = GestionPracticasBDController.consultaEmpresas();
         for (Empresa emp : lista) {

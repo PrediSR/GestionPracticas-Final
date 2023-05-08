@@ -31,3 +31,6 @@
 .table-row-cell:odd:filled:selected {
     -fx-background: -fx-control-inner-background-alt ;
 }
+.comb-exportar-ciclo {
+    -fx-font-size: 16px;
+}

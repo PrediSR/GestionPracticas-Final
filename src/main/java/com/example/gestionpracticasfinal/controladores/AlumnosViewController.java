@@ -15,12 +15,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AlumnosViewController implements Initializable {
+    @FXML private AnchorPane root;
     @FXML private TableView<DatosTabla> tabAlumnos;
     @FXML private TableColumn<DatosTabla, String> colNombre;
     @FXML private TableColumn<DatosTabla, String> colApellidos;
@@ -64,29 +67,35 @@ public class AlumnosViewController implements Initializable {
         }
     }
 
-    ObservableList<DatosTabla> getAlumnos() throws Exception {
+    public ObservableList<DatosTabla> getAlumnos() throws Exception {
+        tabAlumnos.getItems().clear();
         ObservableList<DatosTabla> output = FXCollections.observableArrayList();
         Alumno[] lista = GestionPracticasBDController.consultaAlumnos();
         for (Alumno a : lista) {
-            output.add(new DatosTabla(a, OnClickBtnModifica(a)));
+            output.add(new DatosTabla(a, onClickBtnModifica(a)));
         }
         return output;
     }
 
-    public EventHandler<MouseEvent> OnClickBtnModifica(Alumno a) {
+    public EventHandler<MouseEvent> onClickBtnModifica(Alumno a) {
         return event -> {
             txtNombreAlumno.setText(a.getNombre());
         };
     }
 
-    public void OnClickChangeToEmpresas(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("empresas-view.fxml"));
-            Stage stage = (Stage) tabAlumnos.getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 920, 595);
-            stage.setScene(scene);
-        }catch (Exception e) {
+    public void onClickChangeToEmpresas(MouseEvent event) throws Exception {
+        Stage stage = (Stage) root.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(
+                "empresas-view.fxml"));
+        Scene scene =new Scene(loader.load());
+        stage.setScene(scene);
+    }
 
-        }
+    public void onClickChangeToExportCiclo(MouseEvent event) throws Exception {
+        Stage stage = (Stage) root.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(
+                "exportciclo-view.fxml"));
+        Scene scene =new Scene(loader.load());
+        stage.setScene(scene);
     }
 }

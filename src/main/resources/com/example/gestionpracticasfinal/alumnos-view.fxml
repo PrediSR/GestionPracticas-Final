@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="920.0" style="-fx-background-color: #88b4eb;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestionpracticasfinal.controladores.AlumnosViewController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="920.0" style="-fx-background-color: #88b4eb;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gestionpracticasfinal.controladores.AlumnosViewController">
    <children>
       <AnchorPane layoutX="501.0" layoutY="61.0" prefHeight="45.0" prefWidth="756.0" style="-fx-background-color: #8fe1ff;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -37,7 +37,7 @@
                         </Label>
                      </children>
                   </AnchorPane>
-                  <AnchorPane onMouseClicked="#OnClickChangeToEmpresas" prefHeight="45.0" prefWidth="167.0" styleClass="elemento-menu" stylesheets="@css/estilos.css">
+                  <AnchorPane onMouseClicked="#onClickChangeToEmpresas" prefHeight="45.0" prefWidth="167.0" styleClass="elemento-menu" stylesheets="@css/estilos.css">
                      <children>
                         <ImageView fitHeight="45.0" fitWidth="42.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="1.0" AnchorPane.topAnchor="2.0">
                            <image>
@@ -52,7 +52,7 @@
                      </children>
                   </AnchorPane>
                   <Separator prefHeight="2.0" prefWidth="267.0" visible="false" HBox.hgrow="ALWAYS" />
-                  <AnchorPane prefHeight="45.0" prefWidth="138.0" styleClass="elemento-menu" stylesheets="@css/estilos.css">
+                  <AnchorPane onMouseClicked="#onClickChangeToExportCiclo" prefHeight="45.0" prefWidth="138.0" styleClass="elemento-menu" stylesheets="@css/estilos.css">
                      <children>
                         <ImageView fitHeight="42.0" fitWidth="36.0" layoutX="8.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="4.0">
                            <image>

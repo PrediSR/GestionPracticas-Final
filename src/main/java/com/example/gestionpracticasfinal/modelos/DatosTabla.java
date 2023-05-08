@@ -14,9 +14,17 @@ public class DatosTabla {
     private String col1;
     private String col2;
     private String col3;
+    private String col4;
     private Button btnEliminar;
     private Button btnModificar;
     private Button btnConsultar;
+
+    public DatosTabla(Alumno a) {
+        col1 = a.nombre;
+        col2 = a.getApellidos();
+        col3 = a.telefono;
+        col4 = a.email;
+    }
 
     public DatosTabla(Alumno a, EventHandler<MouseEvent> eModifica) {
         col1 = a.nombre;
