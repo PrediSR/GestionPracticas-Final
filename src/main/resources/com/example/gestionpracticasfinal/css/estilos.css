@@ -1,4 +1,33 @@
 .elemento-menu:hover {
-    -fx-background-color: #ffffff;
+    -fx-background-color:  #88b4eb;
     -fx-cursor: hand;
+}
+.boton-modificar, .boton-eliminar, .boton-consultar {
+    -fx-background-color: transparent;
+    -fx-padding: 3 6;
+    -fx-background-radius: 5em;
+}
+.boton-modificar:hover {
+    -fx-background-color: #a4cfed;
+}
+.boton-eliminar:hover {
+    -fx-background-color: #e68787;
+}
+.boton-consultar:hover {
+    -fx-background-color: #9fe3b0;
+}
+.boton-modificar:hover, .boton-eliminar:hover, .boton-consultar:hover {
+    -fx-cursor: hand;
+}
+.columna-tabla {
+    -fx-alignment: CENTER;
+}
+.table-row-cell:filled:selected {
+    -fx-background: -fx-control-inner-background ;
+    -fx-background-color: -fx-table-cell-border-color, -fx-background ;
+    -fx-background-insets: 0, 0 0 1 0 ;
+    -fx-table-cell-border-color: derive(-fx-color, 5%);
+}
+.table-row-cell:odd:filled:selected {
+    -fx-background: -fx-control-inner-background-alt ;
 }

@@ -1,4 +1,4 @@
-package com.example.gestionpracticasfinal.Modelos;
+package com.example.gestionpracticasfinal.modelos;
 
 //clase contactable que tiene los atributos comunes de empresa y alumno
 public class Contactable {

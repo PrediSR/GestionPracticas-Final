@@ -1,4 +1,4 @@
-package com.example.gestionpracticasfinal.Modelos;
+package com.example.gestionpracticasfinal.modelos;
 
 public class Empresa extends Contactable {
     //Atributos de la clase

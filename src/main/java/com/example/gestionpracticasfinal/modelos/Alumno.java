@@ -1,4 +1,6 @@
-package com.example.gestionpracticasfinal.Modelos;
+package com.example.gestionpracticasfinal.modelos;
+
+import com.example.gestionpracticasfinal.controladores.GestionPracticasBDController;
 
 //clase que hereda de contactable para hacer los alumnos
 public class Alumno extends Contactable{

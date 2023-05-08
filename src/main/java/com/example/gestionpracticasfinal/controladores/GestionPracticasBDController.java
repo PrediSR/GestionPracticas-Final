@@ -1,6 +1,6 @@
-package com.example.gestionpracticasfinal.Controladores;
+package com.example.gestionpracticasfinal.controladores;
 
-import com.example.gestionpracticasfinal.Modelos.*;
+import com.example.gestionpracticasfinal.modelos.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -213,6 +213,27 @@ public class GestionPracticasBDController {
 
         //se devuelve el resultado de llamar al metodo getAlumnos
         return getAlumnos(idC, ps, rs);
+    }
+
+    public static Alumno[] consultaAlumnos() throws Exception {
+        ArrayList<Alumno> lista = new ArrayList<>();
+        //se prepara la consulta
+        String consulta = "select * from alumno;";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(consulta);
+        //por cada resultado del rs pasado se guarda un alumno en la lista
+        while (rs.next()) {
+            lista.add(new Alumno(rs.getInt(1), rs.getString(2), rs.getString(3),
+                    rs.getString(4), rs.getString(5), rs.getInt(6)));
+        }
+
+        //se guarda el arraylist en un array de alumnos
+        Alumno[] out = new Alumno[lista.size()];
+        out = lista.toArray(out);
+        //se cierran rs y ps y se devuelve out
+        rs.close();
+        st.close();
+        return out;
     }
 
     //metodo que recibe un resulset e idC para guardar los alumnos obtenidos en un array que sera devuelto, tambien
