@@ -89,7 +89,7 @@
                   <Font size="15.0" />
                </font>
             </Button>
-            <Label fx:id="lbAlumnosExport" layoutX="331.0" layoutY="35.0" text="Alumnos que se guardaran en el fichero exportado:">
+            <Label layoutX="331.0" layoutY="35.0" text="Alumnos que se guardaran en el fichero exportado:">
                <font>
                   <Font size="15.0" />
                </font>

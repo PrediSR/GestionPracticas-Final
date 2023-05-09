@@ -28,7 +28,6 @@ public class ExportCicloViewController implements Initializable {
     @FXML private TableColumn<DatosTabla, String> colApellidos;
     @FXML private TableColumn<DatosTabla, String> colTelefono;
     @FXML private TableColumn<DatosTabla, String> colEmail;
-    @FXML private Label lbAlumnosExport;
     @FXML private ComboBox<String> combCiclo;
     @FXML private Button btnExportar;
     @FXML private Label lbNoHayAlumnos;
@@ -64,7 +63,7 @@ public class ExportCicloViewController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error al consultar");
             alert.setContentText("Hubo un error con la base de datos y no" +
-                    "pudo realizarse la consulta");
+                    "pudo realizarse la consulta de ciclos");
             alert.setHeaderText(null);
             alert.showAndWait();
         }
