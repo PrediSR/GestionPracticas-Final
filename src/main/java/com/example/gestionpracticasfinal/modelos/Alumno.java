@@ -67,9 +67,10 @@ public class Alumno extends Contactable{
     //override del to string que separa los atributos con /
     @Override
     public String toString() {
-        return "Nombre: " + nombre + " - " +
-                "Apellidos: " + apellidos + " - " +
-                "Teléfono: " + telefono + " - " +
-                "Email: " + email;
+        return "Nombre: " + nombre + ",\n" +
+                "Apellidos: " + apellidos + ",\n" +
+                "Teléfono: " + telefono + ",\n" +
+                "Email: " + email + ",\n" +
+                "*******************************************************\n";
     }
 }

@@ -114,6 +114,14 @@ public class DatosTabla {
         btnModificar.setOnMouseClicked(evento);
     }
 
+    public String getCol4() {
+        return col4;
+    }
+
+    public void setCol4(String col4) {
+        this.col4 = col4;
+    }
+
     public Button getBtnConsultar() {
         return btnConsultar;
     }

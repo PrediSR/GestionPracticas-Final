@@ -83,15 +83,20 @@
                   <Font name="System Bold" size="17.0" />
                </font>
             </Label>
-            <ComboBox fx:id="combCiclo" layoutX="49.0" layoutY="194.0" prefHeight="36.0" prefWidth="209.0" styleClass="comb-exportar-ciclo" stylesheets="@css/estilos.css" />
-            <Button fx:id="btnExportar" layoutX="49.0" layoutY="271.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="209.0" text="EXPORTAR">
+            <ComboBox fx:id="combCiclo" layoutX="49.0" layoutY="194.0" onAction="#onCombCicloSelected" prefHeight="36.0" prefWidth="209.0" styleClass="comb-exportar-ciclo" stylesheets="@css/estilos.css" />
+            <Button fx:id="btnExportar" disable="true" layoutX="49.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#onClickExportButton" prefHeight="45.0" prefWidth="209.0" text="EXPORTAR">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Label fx:id="lbAlumnosExport" layoutX="331.0" layoutY="35.0" text="Alumnos que se guardaran en el fichero exportado:" visible="false">
+            <Label fx:id="lbAlumnosExport" layoutX="331.0" layoutY="35.0" text="Alumnos que se guardaran en el fichero exportado:">
                <font>
                   <Font size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbNoHayAlumnos" layoutX="413.0" layoutY="202.0" text="El ciclo seleccionado no tiene alumnos" visible="false">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
                </font>
             </Label>
             </children>

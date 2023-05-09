@@ -203,7 +203,7 @@ public class GestionPracticasBDController {
     }
 
     //devuelve todos los alumnos que pertenezcan a un ciclo
-    public static Alumno[] consultaAlumnosPorCiclo(int idC) throws Exception {
+    public static Alumno[] consultaAlumnosPorIdCiclo(int idC) throws Exception {
         //se prepara la consulta
         String consulta = "select id, nombre, apellidos, telefono, email from alumno where id_ciclo = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
@@ -213,6 +213,11 @@ public class GestionPracticasBDController {
 
         //se devuelve el resultado de llamar al metodo getAlumnos
         return getAlumnos(idC, ps, rs);
+    }
+
+    public static Alumno[] consultaAlumnosPorNombreCiclo(String nombreC) throws Exception {
+        int idC = consultaIdCiclo(nombreC);
+        return consultaAlumnosPorIdCiclo(idC);
     }
 
     public static Alumno[] consultaAlumnos() throws Exception {
