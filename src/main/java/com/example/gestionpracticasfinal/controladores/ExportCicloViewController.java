@@ -3,15 +3,20 @@ package com.example.gestionpracticasfinal.controladores;
 import com.example.gestionpracticasfinal.MainApplication;
 import com.example.gestionpracticasfinal.modelos.Alumno;
 import com.example.gestionpracticasfinal.modelos.DatosTabla;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -22,22 +27,31 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ExportCicloViewController implements Initializable {
-    @FXML private AnchorPane root;
-    @FXML private TableView<DatosTabla> tabAlumnosExport;
-    @FXML private TableColumn<DatosTabla, String> colNombre;
-    @FXML private TableColumn<DatosTabla, String> colApellidos;
-    @FXML private TableColumn<DatosTabla, String> colTelefono;
-    @FXML private TableColumn<DatosTabla, String> colEmail;
-    @FXML private ComboBox<String> combCiclo;
-    @FXML private Button btnExportar;
-    @FXML private Label lbNoHayAlumnos;
+    @FXML
+    private AnchorPane root;
+    @FXML
+    private TableView<DatosTabla> tabAlumnosExport;
+    @FXML
+    private TableColumn<DatosTabla, String> colNombre;
+    @FXML
+    private TableColumn<DatosTabla, String> colApellidos;
+    @FXML
+    private TableColumn<DatosTabla, String> colTelefono;
+    @FXML
+    private TableColumn<DatosTabla, String> colEmail;
+    @FXML
+    private ComboBox<String> combCiclo;
+    @FXML
+    private Button btnExportar;
+    @FXML
+    private Label lbNoHayAlumnos;
 
 
     public void onClickChangeToAlumnos(MouseEvent event) throws Exception {
         Stage stage = (Stage) root.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(
                 "alumnos-view.fxml"));
-        Scene scene =new Scene(loader.load());
+        Scene scene = new Scene(loader.load());
         stage.setScene(scene);
     }
 
@@ -45,21 +59,41 @@ public class ExportCicloViewController implements Initializable {
         Stage stage = (Stage) root.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource(
                 "empresas-view.fxml"));
-        Scene scene =new Scene(loader.load());
+        Scene scene = new Scene(loader.load());
         stage.setScene(scene);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inicializaTabla();
-        inicializaCombCiclos();
+        actualizaCombCiclos();
+        prueba();
     }
 
-    private void inicializaCombCiclos() {
+    private void prueba() {
+        combCiclo.addEventFilter(Event.ANY, new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+
+            }
+        });
+    }
+
+    private void actualizaCombCiclos() {
         try {
             String[] ciclos = GestionPracticasBDController.consultaCiclosNombres();
-            combCiclo.setItems(FXCollections.observableArrayList(ciclos));
-        }catch (Exception e) {
+            if (ciclos.length > 0) {
+                combCiclo.setItems(FXCollections.observableArrayList(ciclos));
+            } else {
+                combCiclo.setItems(FXCollections.observableArrayList(
+                        "No hay ciclos añadidos"));
+            }
+            if (combCiclo.getItems().size() < 6) {
+                combCiclo.setVisibleRowCount(combCiclo.getItems().size());
+            } else {
+                combCiclo.setVisibleRowCount(5);
+            }
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error al consultar");
             alert.setContentText("Hubo un error con la base de datos y no" +
@@ -82,24 +116,69 @@ public class ExportCicloViewController implements Initializable {
 
     public void onCombCicloSelected(Event event) {
         String ciclo = combCiclo.getValue();
+
         try {
-            ObservableList<DatosTabla> lista = getAlumnosCiclo(ciclo);
-            if (lista.size() > 0) {
-                lbNoHayAlumnos.setVisible(false);
-                tabAlumnosExport.setItems(lista);
-                tabAlumnosExport.setVisible(true);
-            } else {
-                tabAlumnosExport.setVisible(false);
-                lbNoHayAlumnos.setVisible(true);
+            System.out.println(event.getTarget());
+            if (isValorEnCombCiclos(ciclo)) {
+                if (!ciclo.equals("No hay ciclos añadidos")) {
+                    ObservableList<DatosTabla> lista = getAlumnosCiclo(ciclo);
+                    if (lista.size() > 0) {
+                        lbNoHayAlumnos.setVisible(false);
+                        tabAlumnosExport.setItems(lista);
+                        tabAlumnosExport.setVisible(true);
+                    } else {
+                        tabAlumnosExport.setVisible(false);
+                        lbNoHayAlumnos.setVisible(true);
+                    }
+                    btnExportar.setDisable(false);
+                }
             }
-            btnExportar.setDisable(false);
-        }catch (Exception e) {
+        } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error al consultar el ciclo");
             alert.setContentText("No se ha podido hacer la consulta de alumnos" +
                     " que se exportaran");
             alert.setHeaderText(null);
             alert.showAndWait();
+        }
+
+    }
+
+    private boolean isValorEnCombCiclos(String st) {
+        for (String res : combCiclo.getItems()) {
+            if (st != null && st.equalsIgnoreCase(res)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void onKeyPressedBuscaCiclo(KeyEvent event) throws Exception {
+        ObservableList<String> lista = FXCollections.observableArrayList();
+        String[] ciclos;
+        String buscaC = combCiclo.getEditor().getText();
+
+        if (!buscaC.equals("")) {
+            if (GestionPracticasBDController.numCiclos() > 0) {
+                ciclos = GestionPracticasBDController.buscaCiclosNombre(buscaC);
+                if (ciclos.length > 0) {
+                    lista.setAll(ciclos);
+                } else {
+                    lista.add("sin resultados");
+                }
+            } else {
+                lista.add("No hay ciclos añadidos");
+            }
+            if (lista.size() < 6) {
+                combCiclo.setVisibleRowCount(lista.size());
+            } else {
+                combCiclo.setVisibleRowCount(5);
+            }
+            combCiclo.setItems(lista);
+            combCiclo.show();
+        } else {
+            actualizaCombCiclos();
+            combCiclo.hide();
         }
     }
 
@@ -133,7 +212,7 @@ public class ExportCicloViewController implements Initializable {
                     alert.showAndWait();
 
                     reiniciaSeleccion();
-                }catch (Exception e) {
+                } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setHeaderText(null);
                     alert.setTitle("ERROR AL EXPORTAR");

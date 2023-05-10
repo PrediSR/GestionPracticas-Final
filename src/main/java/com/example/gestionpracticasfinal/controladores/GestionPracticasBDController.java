@@ -65,6 +65,24 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    public static String[] buscaCiclosNombre(String nombre) throws Exception {
+        ArrayList<String> lista = new ArrayList<>();
+        String consulta = "select nombre from ciclo where nombre like ?;";
+        PreparedStatement ps = conexion.prepareStatement(consulta);
+        ps.setString(1, "%" + nombre + "%");
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            lista.add(rs.getString(1));
+        }
+
+        String[] out = new String[lista.size()];
+        out = lista.toArray(out);
+        rs.close();
+        ps.close();
+        return out;
+    }
+
     //metodo para obtener el id de un ciclo pasando un nombre
     public static int consultaIdCiclo(String nombre) throws Exception {
         //preparacion de la consulta e insercion de la variable de nombre en ella
@@ -97,6 +115,21 @@ public class GestionPracticasBDController {
         ps.close();
         rs.close();
         return out;
+    }
+
+    public static int numCiclos() throws Exception {
+        int output = 0;
+        String consulta = "select count(*) from ciclo;";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(consulta);
+
+        while (rs.next()) {
+            output = rs.getInt(1);
+        }
+
+        st.close();
+        rs.close();
+        return output;
     }
 
     //metodo que devuelve cuantos alumnos hay en un ciclo pasando la id del ciclo

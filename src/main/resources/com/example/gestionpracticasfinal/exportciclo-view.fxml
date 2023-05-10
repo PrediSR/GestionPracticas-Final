@@ -72,7 +72,7 @@
                   <Font name="System Bold" size="17.0" />
                </font>
             </Label>
-            <ComboBox fx:id="combCiclo" editable="true" layoutX="49.0" layoutY="194.0" onAction="#onCombCicloSelected" prefHeight="36.0" prefWidth="209.0" styleClass="comb-exportar-ciclo" stylesheets="@css/estilos.css" />
+            <ComboBox fx:id="combCiclo" editable="true" layoutX="49.0" layoutY="194.0" onAction="#onCombCicloSelected" onKeyReleased="#onKeyPressedBuscaCiclo" prefHeight="36.0" prefWidth="209.0" styleClass="comb-exportar-ciclo" stylesheets="@css/estilos.css" />
             <Button fx:id="btnExportar" disable="true" layoutX="49.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#onClickExportButton" prefHeight="45.0" prefWidth="209.0" text="EXPORTAR">
                <font>
                   <Font size="15.0" />
