@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -32,6 +33,7 @@ public class AlumnosViewController implements Initializable {
     @FXML private TableColumn<DatosTabla, String> colModifica;
     @FXML private TableColumn<DatosTabla, String> colConsulta;
     @FXML private TextField txtNombreAlumno;
+    @FXML private Label lbNoAlumnos;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,6 +59,13 @@ public class AlumnosViewController implements Initializable {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        tablaVisible();
+    }
+
+    private void tablaVisible() {
+        boolean visible = tabAlumnos.getItems().size() > 0;
+        tabAlumnos.setVisible(visible);
+        lbNoAlumnos.setVisible(!visible);
     }
 
     private static void conectaBD() {
