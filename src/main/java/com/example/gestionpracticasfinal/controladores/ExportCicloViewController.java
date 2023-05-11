@@ -3,19 +3,16 @@ package com.example.gestionpracticasfinal.controladores;
 import com.example.gestionpracticasfinal.MainApplication;
 import com.example.gestionpracticasfinal.modelos.Alumno;
 import com.example.gestionpracticasfinal.modelos.DatosTabla;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
+import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -41,10 +38,12 @@ public class ExportCicloViewController implements Initializable {
     private TableColumn<DatosTabla, String> colEmail;
     @FXML
     private ComboBox<String> combCiclo;
+    @FXML private ListView<String> lvCombCiclos;
     @FXML
     private Button btnExportar;
     @FXML
     private Label lbNoHayAlumnos;
+    private TextField editor;
 
 
     public void onClickChangeToAlumnos(MouseEvent event) throws Exception {
@@ -66,20 +65,51 @@ public class ExportCicloViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inicializaTabla();
-        actualizaCombCiclos();
-        prueba();
-    }
-
-    private void prueba() {
-        combCiclo.addEventFilter(Event.ANY, new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-
-            }
+        inicializaCombCiclos();
+        editor = combCiclo.getEditor();
+        editor.setOnKeyReleased(this::configuraBusquedaComb);
+        editor.setOnMouseClicked(event -> {
+            lvCombCiclos.setVisible(true);
+            btnExportar.toBack();
         });
     }
 
-    private void actualizaCombCiclos() {
+    private void configuraBusquedaComb(KeyEvent event) {
+        if (event.getCode() == KeyCode.UP) {
+            int selectedIndex = lvCombCiclos.getSelectionModel().getSelectedIndex();
+            if (selectedIndex > 0) {
+                lvCombCiclos.getSelectionModel().select(selectedIndex - 1);
+            }
+        } else if (event.getCode() == KeyCode.DOWN) {
+            int selectedIndex = lvCombCiclos.getSelectionModel().getSelectedIndex();
+            if (selectedIndex < lvCombCiclos.getItems().size() - 1) {
+                lvCombCiclos.getSelectionModel().select(selectedIndex + 1);
+            }
+        } else if (event.getCode() == KeyCode.ENTER) {
+            String selectedItem = lvCombCiclos.getSelectionModel().getSelectedItem();
+            if (selectedItem == null) {
+                lvCombCiclos.getSelectionModel().select(0);
+                selectedItem = lvCombCiclos.getSelectionModel().getSelectedItem();
+            }
+            if (selectedItem != null) {
+                combCiclo.getSelectionModel().select(selectedItem);
+                muestraTabla();
+            }
+            combCiclo.hide();
+            lvCombCiclos.setVisible(false);
+            btnExportar.toFront();
+            btnExportar.requestFocus();
+        } else {
+            // Filter the items based on user input
+            String buscaC = editor.getText();
+            lvCombCiclos.setItems(buscaCiclos(buscaC));
+            combCiclo.hide();
+            lvCombCiclos.setVisible(true);
+            btnExportar.toBack();
+        }
+    }
+
+    private void inicializaCombCiclos() {
         try {
             String[] ciclos = GestionPracticasBDController.consultaCiclosNombres();
             if (ciclos.length > 0) {
@@ -88,11 +118,7 @@ public class ExportCicloViewController implements Initializable {
                 combCiclo.setItems(FXCollections.observableArrayList(
                         "No hay ciclos añadidos"));
             }
-            if (combCiclo.getItems().size() < 6) {
-                combCiclo.setVisibleRowCount(combCiclo.getItems().size());
-            } else {
-                combCiclo.setVisibleRowCount(5);
-            }
+            lvCombCiclos.setItems(combCiclo.getItems());
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error al consultar");
@@ -114,13 +140,12 @@ public class ExportCicloViewController implements Initializable {
         colEmail.setReorderable(false);
     }
 
-    public void onCombCicloSelected(Event event) {
+    public void muestraTabla() {
         String ciclo = combCiclo.getValue();
 
         try {
-            System.out.println(event.getTarget());
             if (isValorEnCombCiclos(ciclo)) {
-                if (!ciclo.equals("No hay ciclos añadidos")) {
+                if (!ciclo.equals("No hay ciclos añadidos") && !ciclo.equals("sin resultados")) {
                     ObservableList<DatosTabla> lista = getAlumnosCiclo(ciclo);
                     if (lista.size() > 0) {
                         lbNoHayAlumnos.setVisible(false);
@@ -131,7 +156,11 @@ public class ExportCicloViewController implements Initializable {
                         lbNoHayAlumnos.setVisible(true);
                     }
                     btnExportar.setDisable(false);
+                } else {
+                    quitaTabla();
                 }
+            } else {
+                quitaTabla();
             }
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -153,12 +182,11 @@ public class ExportCicloViewController implements Initializable {
         return false;
     }
 
-    public void onKeyPressedBuscaCiclo(KeyEvent event) throws Exception {
+    public ObservableList<String> buscaCiclos(String buscaC) {
         ObservableList<String> lista = FXCollections.observableArrayList();
         String[] ciclos;
-        String buscaC = combCiclo.getEditor().getText();
 
-        if (!buscaC.equals("")) {
+        try {
             if (GestionPracticasBDController.numCiclos() > 0) {
                 ciclos = GestionPracticasBDController.buscaCiclosNombre(buscaC);
                 if (ciclos.length > 0) {
@@ -169,17 +197,16 @@ public class ExportCicloViewController implements Initializable {
             } else {
                 lista.add("No hay ciclos añadidos");
             }
-            if (lista.size() < 6) {
-                combCiclo.setVisibleRowCount(lista.size());
-            } else {
-                combCiclo.setVisibleRowCount(5);
-            }
-            combCiclo.setItems(lista);
-            combCiclo.show();
-        } else {
-            actualizaCombCiclos();
-            combCiclo.hide();
+        }catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("ERROR CONEXION BD");
+            alert.setContentText("Hubo un error con la base de datos y no se pudo" +
+                    " consultar los ciclos");
+            alert.showAndWait();
         }
+
+        return lista;
     }
 
     public ObservableList<DatosTabla> getAlumnosCiclo(String ciclo) throws Exception {
@@ -231,9 +258,48 @@ public class ExportCicloViewController implements Initializable {
         }
     }
 
+    public void onClickCombCiclos(MouseEvent event) {
+        String buscaC = editor.getText();
+        if (!isValorEnCombCiclos(buscaC)) {
+            lvCombCiclos.setItems(buscaCiclos(buscaC));
+        }
+        combCiclo.hide();
+        lvCombCiclos.setVisible(!lvCombCiclos.isVisible());
+        if (lvCombCiclos.isVisible()) {
+            btnExportar.toBack();
+        } else {
+            btnExportar.toFront();
+            btnExportar.requestFocus();
+        }
+    }
+
+    public void onClickListCiclos(MouseEvent event) {
+        String selectedItem = lvCombCiclos.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            combCiclo.getSelectionModel().select(selectedItem);
+            lvCombCiclos.setVisible(false);
+            btnExportar.toFront();
+            btnExportar.requestFocus();
+            muestraTabla();
+        }
+    }
+
     private void reiniciaSeleccion() {
-        combCiclo.setValue("");
+        combCiclo.setValue(null);
+        lvCombCiclos.setItems(combCiclo.getItems());
+        lvCombCiclos.setVisible(false);
+        quitaTabla();
+    }
+
+    private void quitaTabla() {
         tabAlumnosExport.setVisible(false);
         lbNoHayAlumnos.setVisible(false);
+        btnExportar.setDisable(true);
+    }
+
+    public void onClickUnselect(MouseEvent event) {
+        btnExportar.requestFocus();
+        lvCombCiclos.setVisible(false);
+        btnExportar.toFront();
     }
 }
