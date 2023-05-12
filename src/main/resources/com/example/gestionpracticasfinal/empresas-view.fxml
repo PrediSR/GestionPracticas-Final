@@ -70,7 +70,7 @@
         </AnchorPane>
         <AnchorPane layoutX="501.0" layoutY="104.0" prefHeight="417.0" prefWidth="920.0" style="-fx-background-color: #e3f8ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
             <children>
-            <VBox layoutX="365.0" layoutY="64.0" prefHeight="365.0" prefWidth="497.0">
+            <VBox layoutX="365.0" layoutY="64.0" prefHeight="365.0" prefWidth="532.0">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="480.0">
                      <children>
@@ -155,23 +155,23 @@
                         <Separator prefHeight="9.0" prefWidth="25.0" visible="false" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnGuardar" mnemonicParsing="false" onMouseClicked="#onClickGuardaEmpresa" prefHeight="36.0" prefWidth="72.0" text="Guardar" />
                         <Separator prefHeight="3.0" prefWidth="25.0" visible="false" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnCancelar" mnemonicParsing="false" prefHeight="36.0" prefWidth="73.0" text="Cancelar" />
+                        <Button fx:id="btnCancelar" mnemonicParsing="false" onMouseClicked="#onClickReinicia" prefHeight="36.0" prefWidth="73.0" text="Cancelar" />
                         <Separator prefHeight="1.0" prefWidth="14.0" visible="false" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnTerminaConsulta" mnemonicParsing="false" prefHeight="36.0" prefWidth="119.0" text="Terminar Consulta" visible="false" />
+                        <Button fx:id="btnTerminaConsulta" mnemonicParsing="false" onMouseClicked="#onClickReinicia" prefHeight="36.0" prefWidth="119.0" text="Terminar Consulta" visible="false" />
                         <Separator prefHeight="5.0" prefWidth="36.0" visible="false" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <CheckBox fx:id="cbFiltrarNombre" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" text="Filtrar Nombre">
+            <CheckBox fx:id="cbFiltrarNombre" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#onClickCheckFiltro" text="Filtrar Nombre">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </CheckBox>
-            <TextField fx:id="txtFiltrarNombre" layoutX="183.0" layoutY="22.0" prefHeight="25.0" prefWidth="201.0" />
+            <TextField fx:id="txtFiltrarNombre" layoutX="183.0" layoutY="22.0" onKeyReleased="#onKeyReleasedFiltro" prefHeight="25.0" prefWidth="201.0" />
             <AnchorPane layoutX="14.0" layoutY="69.0" prefHeight="454.0" prefWidth="319.0" style="-fx-background-color: rgba(33, 255, 229, 0.46);">
                <children>
-                      <TableView fx:id="tabEmpresas" prefHeight="454.0" prefWidth="319.0" stylesheets="@css/estilos.css" visible="false">
+                      <TableView fx:id="tabEmpresas" prefHeight="454.0" prefWidth="333.0" stylesheets="@css/estilos.css" visible="false">
                           <columns>
                               <TableColumn fx:id="colCodigo" editable="false" prefWidth="82.0" resizable="false" styleClass="columna-tabla" text="Codigo" />
                               <TableColumn fx:id="colNombre" editable="false" prefWidth="121.0" resizable="false" styleClass="columna-tabla" text="Nombre" />

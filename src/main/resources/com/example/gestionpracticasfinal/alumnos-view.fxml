@@ -151,7 +151,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <Button fx:id="btnAnadePracticas" layoutX="417.0" layoutY="271.0" mnemonicParsing="false" text="Añadir Practicas">
+            <Button fx:id="btnAnadePracticas" layoutX="434.0" layoutY="273.0" mnemonicParsing="false" text="Añadir Practicas">
                <font>
                   <Font name="System Bold Italic" size="12.0" />
                </font>
@@ -262,9 +262,9 @@
             <TextField fx:id="txtFiltroApellidos" layoutX="405.0" layoutY="30.0" />
             <CheckBox fx:id="cbFiltroCiclo" layoutX="574.0" layoutY="34.0" mnemonicParsing="false" text="Filtrar Ciclo:" />
             <ComboBox fx:id="combFiltroCiclo" editable="true" layoutX="671.0" layoutY="30.0" prefWidth="150.0" promptText="Nombre Ciclo" />
-            <AnchorPane layoutX="14.0" layoutY="73.0" prefHeight="450.0" prefWidth="381.0" style="-fx-background-color: rgba(33, 255, 229, 0.46);">
+            <AnchorPane layoutX="7.0" layoutY="73.0" prefHeight="450.0" prefWidth="372.0" style="-fx-background-color: rgba(33, 255, 229, 0.46);">
                <children>
-                  <TableView fx:id="tabAlumnos" prefHeight="450.0" prefWidth="381.0" stylesheets="@css/estilos.css" visible="false">
+                  <TableView fx:id="tabAlumnos" prefHeight="450.0" prefWidth="395.0" stylesheets="@css/estilos.css" visible="false">
                     <columns>
                       <TableColumn fx:id="colNombre" editable="false" prefWidth="107.0" resizable="false" styleClass="columna-tabla" text="Nombre" />
                       <TableColumn fx:id="colApellidos" editable="false" prefWidth="105.0" resizable="false" styleClass="columna-tabla" text="Apellidos" />

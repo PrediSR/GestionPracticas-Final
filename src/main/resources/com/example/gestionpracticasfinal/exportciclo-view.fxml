@@ -91,7 +91,7 @@
                         <Font name="System Bold Italic" size="15.0" />
                      </font>
                   </Label>
-                      <TableView fx:id="tabAlumnosExport" prefHeight="454.0" prefWidth="523.0" stylesheets="@css/estilos.css" visible="false">
+                      <TableView fx:id="tabAlumnosExport" prefHeight="454.0" prefWidth="537.0" stylesheets="@css/estilos.css" visible="false">
                           <columns>
                               <TableColumn fx:id="colNombre" editable="false" prefWidth="120.0" resizable="false" styleClass="columna-tabla" text="Nombre" />
                               <TableColumn fx:id="colApellidos" editable="false" prefWidth="111.0" resizable="false" styleClass="columna-tabla" text="Apellidos" />

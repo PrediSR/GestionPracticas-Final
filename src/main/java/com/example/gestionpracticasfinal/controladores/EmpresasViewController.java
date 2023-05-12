@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -39,6 +40,7 @@ public class EmpresasViewController implements Initializable {
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
     @FXML private Button btnTerminaConsulta;
+    @FXML private CheckBox cbFiltrarNombre;
     private Empresa modificado = null;
 
     public void onClickChangeToAlumnos(MouseEvent event) throws Exception {
@@ -73,12 +75,17 @@ public class EmpresasViewController implements Initializable {
         colConsulta.setReorderable(false);
         colModifica.setReorderable(false);
         colElimina.setReorderable(false);
+        muestraTodasEmpresasTabla();
+        tablaVisible();
+    }
+
+    private void muestraTodasEmpresasTabla() {
         try {
-            tabEmpresas.setItems(getEmpresas());
+            Empresa[] lista = GestionPracticasBDController.consultaEmpresas();
+            tabEmpresas.setItems(getEmpresasTabla(lista));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        tablaVisible();
     }
 
     public void tablaVisible() {
@@ -87,10 +94,9 @@ public class EmpresasViewController implements Initializable {
         lbNoEmpresas.setVisible(!visible);
     }
 
-    public ObservableList<DatosTabla> getEmpresas() throws Exception {
+    public ObservableList<DatosTabla> getEmpresasTabla(Empresa[] lista) throws Exception {
         tabEmpresas.getItems().clear();
         ObservableList<DatosTabla> output = FXCollections.observableArrayList();
-        Empresa[] lista = GestionPracticasBDController.consultaEmpresas();
         for (Empresa emp : lista) {
             output.add(new DatosTabla(emp, consultaEmpresa(emp), modificaEmpresa(emp), eliminaEmpresa(emp)));
         }
@@ -130,13 +136,31 @@ public class EmpresasViewController implements Initializable {
             if (alert.getResult() == ButtonType.OK)  {
                 try {
                     GestionPracticasBDController.eliminaEmpresa(emp.getId());
-                    tabEmpresas.setItems(getEmpresas());
+                    muestraTodasEmpresasTabla();
+                    tablaVisible();
+                    reiniciaDatosRellenar();
                 } catch (Exception e) {
                     alertError("ERROR BD",
                             "Hubo un error con la base de datos al eliminar la empresa");
                 }
             }
         };
+    }
+
+    public void onClickReinicia(MouseEvent e) {
+        reiniciaDatosRellenar();
+    }
+
+    private void reiniciaDatosRellenar() {
+        lbTituloAccion.setText("Añadir Empresa");
+        vaciaTxtDatos();
+        btnTerminaConsulta.setVisible(false);
+        btnGuardar.setVisible(true);
+        btnCancelar.setVisible(true);
+        txtDatosDisable(false);
+        cbFiltrarNombre.setSelected(false);
+        txtFiltrarNombre.setText("");
+        modificado = null;
     }
 
     public void setTxtDatosEmpresa(Empresa emp) {
@@ -162,9 +186,9 @@ public class EmpresasViewController implements Initializable {
             if (modificado == null) {
                 try {
                     GestionPracticasBDController.insertarEmpresa(emp);
-                    tabEmpresas.setItems(getEmpresas());
+                    muestraTodasEmpresasTabla();
                     tablaVisible();
-                    vaciaTxtDatos();
+                    reiniciaDatosRellenar();
                 }catch (Exception e) {
                     alertaWarning("EMPRESA REPETIDA",
                             "La empresa no fue añadida, el nombre ya existe en la lista de empresas");
@@ -174,15 +198,13 @@ public class EmpresasViewController implements Initializable {
                     emp.setId(modificado.getId());
                     try {
                         GestionPracticasBDController.actualizaEmpresa(emp);
-                        tabEmpresas.setItems(getEmpresas());
+                        muestraTodasEmpresasTabla();
                     }catch (Exception e) {
                         alertError("ERROR BD",
                                 "Hubo un error con la base de datos al modificar la empresa");
                     }
                 }
-                vaciaTxtDatos();
-                lbTituloAccion.setText("Añadir Empresa");
-                modificado = null;
+                reiniciaDatosRellenar();
             }
         } else {
             if (emp.isRellenoNomConDir() && !txtNumTel.getText().equals("") && !txtEmailEmpresa.getText().equals("")) {
@@ -241,5 +263,38 @@ public class EmpresasViewController implements Initializable {
         e.setDireccion(txtDireccion.getText());
 
         return e;
+    }
+
+    public void onClickCheckFiltro(MouseEvent event) {
+        filtraTabla();
+        try {
+            if (!cbFiltrarNombre.isSelected() &&
+                    tabEmpresas.getItems().size() != GestionPracticasBDController.numEmpresas()) {
+                muestraTodasEmpresasTabla();
+            }
+        }catch (Exception e) {
+            alertError("ERROR BD", "Hubo un error de conexion con la base de datos");
+        }
+    }
+
+    public void onKeyReleasedFiltro(KeyEvent event) {
+        filtraTabla();
+    }
+
+    private void filtraTabla() {
+        try {
+            if (cbFiltrarNombre.isSelected() &&
+                    txtFiltrarNombre != null && !txtFiltrarNombre.getText().equals("")) {
+                Empresa[] lista = GestionPracticasBDController.consultaBuscaEmpresas(
+                        txtFiltrarNombre.getText());
+                tabEmpresas.setItems(getEmpresasTabla(lista));
+            } else if (cbFiltrarNombre.isSelected() && (txtFiltrarNombre == null
+                    || txtFiltrarNombre.getText().equals(""))) {
+                muestraTodasEmpresasTabla();
+            }
+        }catch (Exception e) {
+            alertError("ERROR DB", "Hubo un error con la base de datos" +
+                    " al filtrar las empresas");
+        }
     }
 }
