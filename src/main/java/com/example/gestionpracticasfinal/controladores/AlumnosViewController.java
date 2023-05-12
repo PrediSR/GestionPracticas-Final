@@ -10,10 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -34,11 +31,13 @@ public class AlumnosViewController implements Initializable {
     @FXML private TableColumn<DatosTabla, String> colConsulta;
     @FXML private TextField txtNombreAlumno;
     @FXML private Label lbNoAlumnos;
+    @FXML private ComboBox<String> combCiclo;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         conectaBD();
         inicializaTabla();
+        combCiclo.getItems().add("+ Alta Nuevo Ciclo");
     }
 
     private void inicializaTabla() {
@@ -60,6 +59,17 @@ public class AlumnosViewController implements Initializable {
             throw new RuntimeException(e);
         }
         tablaVisible();
+    }
+
+    public void onSelectCombCiclos() {
+        if (combCiclo.getValue().equals("+ Alta Nuevo Ciclo")) {
+            TextInputDialog td = new TextInputDialog();
+            td.setTitle("Añadir Ciclo");
+            td.setContentText("Introduzca un nombre para el nuevo ciclo que sera dado de alta");
+            // setHeaderText
+            td.setHeaderText(null);
+            td.showAndWait();
+        }
     }
 
     private void tablaVisible() {

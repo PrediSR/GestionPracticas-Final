@@ -5,7 +5,6 @@ import com.example.gestionpracticasfinal.modelos.Alumno;
 import com.example.gestionpracticasfinal.modelos.DatosTabla;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -71,6 +70,7 @@ public class ExportCicloViewController implements Initializable {
         editor.setOnMouseClicked(event -> {
             lvCombCiclos.setVisible(true);
             btnExportar.toBack();
+
         });
     }
 
@@ -79,11 +79,13 @@ public class ExportCicloViewController implements Initializable {
             int selectedIndex = lvCombCiclos.getSelectionModel().getSelectedIndex();
             if (selectedIndex > 0) {
                 lvCombCiclos.getSelectionModel().select(selectedIndex - 1);
+                lvCombCiclos.scrollTo(selectedIndex - 1);
             }
         } else if (event.getCode() == KeyCode.DOWN) {
             int selectedIndex = lvCombCiclos.getSelectionModel().getSelectedIndex();
             if (selectedIndex < lvCombCiclos.getItems().size() - 1) {
                 lvCombCiclos.getSelectionModel().select(selectedIndex + 1);
+                lvCombCiclos.scrollTo(selectedIndex + 1);
             }
         } else if (event.getCode() == KeyCode.ENTER) {
             String selectedItem = lvCombCiclos.getSelectionModel().getSelectedItem();
@@ -99,6 +101,7 @@ public class ExportCicloViewController implements Initializable {
             lvCombCiclos.setVisible(false);
             btnExportar.toFront();
             btnExportar.requestFocus();
+            lvCombCiclos.setItems(combCiclo.getItems());
         } else {
             // Filter the items based on user input
             String buscaC = editor.getText();
@@ -122,7 +125,7 @@ public class ExportCicloViewController implements Initializable {
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error al consultar");
-            alert.setContentText("Hubo un error con la base de datos y no" +
+            alert.setContentText("Hubo un error con la base de datos y no " +
                     "pudo realizarse la consulta de ciclos");
             alert.setHeaderText(null);
             alert.showAndWait();
@@ -243,7 +246,7 @@ public class ExportCicloViewController implements Initializable {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setHeaderText(null);
                     alert.setTitle("ERROR AL EXPORTAR");
-                    alert.setContentText("Hubo un error al exportar el ciclo y no pudo" +
+                    alert.setContentText("Hubo un error al exportar el ciclo y no pudo " +
                             "crearse el fichero");
                     alert.showAndWait();
                 }

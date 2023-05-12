@@ -34,3 +34,11 @@
 .comb-exportar-ciclo {
     -fx-font-size: 16px;
 }
+.list-view {
+    -fx-font-size: 16px;
+}
+.text-field:disabled {
+    -fx-opacity: 0.8;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+}

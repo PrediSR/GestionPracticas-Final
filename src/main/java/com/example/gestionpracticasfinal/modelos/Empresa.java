@@ -51,4 +51,27 @@ public class Empresa extends Contactable {
             this.direccion = direccion;
         }
     }
+
+    public boolean isTodoRellenoMenosId() {
+        return telefono != null && !telefono.equals("") && email != null && !email.equals("") && isRellenoNomConDir();
+    }
+
+    public boolean isRellenoNomConDir() {
+        return nombre != null && !nombre.equals("") && personaContacto != null && !personaContacto.equals("") &&
+                direccion != null && !direccion.equals("");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Empresa e;
+
+        if (obj instanceof Empresa) {
+            e = (Empresa) obj;
+
+            return nombre.equalsIgnoreCase(e.nombre) && personaContacto.equalsIgnoreCase(e.personaContacto) &&
+                    telefono.equals(e.telefono) && email.equalsIgnoreCase(e.email) && direccion.equalsIgnoreCase(e.direccion);
+        }
+
+        return false;
+    }
 }

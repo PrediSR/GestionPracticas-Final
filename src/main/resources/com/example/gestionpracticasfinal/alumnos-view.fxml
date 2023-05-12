@@ -120,7 +120,7 @@
                                  </font>
                               </Label>
                               <Separator prefHeight="13.0" prefWidth="12.0" visible="false" HBox.hgrow="ALWAYS" />
-                              <ComboBox fx:id="combCiclo" editable="true" prefHeight="25.0" prefWidth="146.0" promptText="Escoga una opción" />
+                              <ComboBox fx:id="combCiclo" editable="true" onAction="#onSelectCombCiclos" prefHeight="25.0" prefWidth="146.0" promptText="Escoga una opción" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="442.0">

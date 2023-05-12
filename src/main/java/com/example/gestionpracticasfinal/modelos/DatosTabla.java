@@ -34,20 +34,21 @@ public class DatosTabla {
         } catch (Exception e) {
             col3 = "Error, idCiclo: " + a.getIdCiclo();
         }
-        inicializaConsulta();
+        inicializaConsulta(event -> {});
         inicializaModifica(eModifica);
-        inicializaElimina();
+        inicializaElimina(event -> {});
     }
 
-    public DatosTabla(Empresa emp) {
-        col1 = emp.id + "";
+    public DatosTabla(Empresa emp, EventHandler<MouseEvent> cons, EventHandler<MouseEvent> modf,
+                      EventHandler<MouseEvent> eli) {
+        col1 = String.valueOf(emp.id);
         col2 = emp.nombre;
-        inicializaConsulta();
-        inicializaModifica(event -> {});
-        inicializaElimina();
+        inicializaConsulta(cons);
+        inicializaModifica(modf);
+        inicializaElimina(eli);
     }
 
-    private void inicializaConsulta() {
+    private void inicializaConsulta(EventHandler<MouseEvent> e) {
         btnConsultar = disenoBaseBtn("com/example/gestionpracticasfinal/img/consultaBtn.png",
                 "boton-consultar");
         btnConsultar.setOnMouseEntered(event -> {
@@ -63,9 +64,10 @@ public class DatosTabla {
             img.setFitHeight(BTNIMGSIZE);
             btnConsultar.setGraphic(img);
         });
+        btnConsultar.setOnMouseClicked(e);
     }
 
-    private void inicializaElimina() {
+    private void inicializaElimina(EventHandler<MouseEvent> e) {
         btnEliminar = disenoBaseBtn("com/example/gestionpracticasfinal/img/eliminaBtn.png",
                 "boton-eliminar");
         btnEliminar.setOnMouseEntered(event -> {
@@ -81,6 +83,7 @@ public class DatosTabla {
             img.setFitHeight(BTNIMGSIZE);
             btnEliminar.setGraphic(img);
         });
+        btnEliminar.setOnMouseClicked(e);
     }
 
     private Button disenoBaseBtn(String stImg, String stClase) {

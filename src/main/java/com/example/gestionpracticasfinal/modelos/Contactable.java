@@ -108,6 +108,12 @@ public class Contactable {
 
     //se comprueba que el string pasado como parametro es un email valido al no tener espacios y tener 1 arroba
     public static boolean emailCorrecto(String email) {
-        return email.indexOf('@') > -1 && email.indexOf(' ') == -1 && email.length() <= 40;
+        int cuentaArrobas = 0;
+
+        for (int i = 0; i < email.length(); i++) {
+            cuentaArrobas = email.charAt(i) == '@' ? cuentaArrobas + 1 : cuentaArrobas;
+        }
+
+        return cuentaArrobas == 1 && email.indexOf(' ') == -1 && email.length() <= 40;
     }
 }

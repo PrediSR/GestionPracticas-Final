@@ -70,23 +70,11 @@
         </AnchorPane>
         <AnchorPane layoutX="501.0" layoutY="104.0" prefHeight="417.0" prefWidth="920.0" style="-fx-background-color: #e3f8ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
             <children>
-                <TableView fx:id="tabEmpresas" layoutX="14.0" layoutY="69.0" prefHeight="454.0" prefWidth="319.0" stylesheets="@css/estilos.css">
-                    <columns>
-                        <TableColumn fx:id="colCodigo" editable="false" prefWidth="82.0" resizable="false" styleClass="columna-tabla" text="Codigo" />
-                        <TableColumn fx:id="colNombre" editable="false" prefWidth="121.0" resizable="false" styleClass="columna-tabla" text="Nombre" />
-                        <TableColumn fx:id="colConsulta" editable="false" prefWidth="38.0" resizable="false" sortable="false" styleClass="columna-tabla" />
-                        <TableColumn fx:id="colModifica" editable="false" minWidth="9.0" prefWidth="38.0" resizable="false" sortable="false" styleClass="columna-tabla" />
-                        <TableColumn fx:id="colElimina" editable="false" minWidth="7.0" prefWidth="38.0" resizable="false" sortable="false" styleClass="columna-tabla" />
-                    </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-                </TableView>
             <VBox layoutX="365.0" layoutY="64.0" prefHeight="365.0" prefWidth="497.0">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="480.0">
                      <children>
-                        <Label text="Añadir Empresa">
+                        <Label fx:id="lbTituloAccion" text="Añadir Empresa">
                            <font>
                               <Font name="System Bold" size="17.0" />
                            </font>
@@ -107,7 +95,7 @@
                            </font>
                         </Label>
                         <Separator prefHeight="0.0" prefWidth="26.0" visible="false" />
-                        <TextField prefHeight="25.0" prefWidth="175.0" />
+                        <TextField fx:id="txtNombreEmpresa" prefHeight="25.0" prefWidth="175.0" stylesheets="@css/estilos.css" />
                         <Separator prefHeight="0.0" prefWidth="30.0" visible="false" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
@@ -120,7 +108,7 @@
                            </font>
                         </Label>
                         <Separator prefHeight="0.0" prefWidth="24.0" visible="false" />
-                        <TextField prefHeight="25.0" prefWidth="216.0" />
+                        <TextField fx:id="txtContactoEmpresa" prefHeight="25.0" prefWidth="216.0" stylesheets="@css/estilos.css" />
                         <Separator prefHeight="0.0" prefWidth="30.0" visible="false" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
@@ -133,7 +121,7 @@
                            </font>
                         </Label>
                         <Separator prefHeight="4.0" prefWidth="64.0" visible="false" />
-                        <TextField prefHeight="25.0" prefWidth="156.0" />
+                        <TextField fx:id="txtNumTel" prefHeight="25.0" prefWidth="156.0" stylesheets="@css/estilos.css" />
                         <Separator prefHeight="0.0" prefWidth="30.0" visible="false" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
@@ -146,7 +134,7 @@
                            </font>
                         </Label>
                         <Separator prefHeight="2.0" prefWidth="20.0" visible="false" />
-                        <TextField prefHeight="25.0" prefWidth="201.0" />
+                        <TextField fx:id="txtEmailEmpresa" prefHeight="25.0" prefWidth="201.0" stylesheets="@css/estilos.css" />
                         <Separator prefHeight="0.0" prefWidth="30.0" visible="false" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
@@ -159,15 +147,15 @@
                            </font>
                         </Label>
                         <Separator prefHeight="4.0" prefWidth="84.0" visible="false" />
-                        <TextField prefHeight="25.0" prefWidth="201.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="txtDireccion" prefHeight="25.0" prefWidth="201.0" stylesheets="@css/estilos.css" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="497.0">
                      <children>
                         <Separator prefHeight="9.0" prefWidth="25.0" visible="false" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="72.0" text="Guardar" />
+                        <Button fx:id="btnGuardar" mnemonicParsing="false" onMouseClicked="#onClickGuardaEmpresa" prefHeight="36.0" prefWidth="72.0" text="Guardar" />
                         <Separator prefHeight="3.0" prefWidth="25.0" visible="false" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="73.0" text="Cancelar" />
+                        <Button fx:id="btnCancelar" mnemonicParsing="false" prefHeight="36.0" prefWidth="73.0" text="Cancelar" />
                         <Separator prefHeight="1.0" prefWidth="14.0" visible="false" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnTerminaConsulta" mnemonicParsing="false" prefHeight="36.0" prefWidth="119.0" text="Terminar Consulta" visible="false" />
                         <Separator prefHeight="5.0" prefWidth="36.0" visible="false" HBox.hgrow="ALWAYS" />
@@ -175,12 +163,33 @@
                   </HBox>
                </children>
             </VBox>
-            <CheckBox layoutX="24.0" layoutY="24.0" mnemonicParsing="false" text="Filtrar Nombre">
+            <CheckBox fx:id="cbFiltrarNombre" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" text="Filtrar Nombre">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </CheckBox>
-            <TextField layoutX="183.0" layoutY="22.0" prefHeight="25.0" prefWidth="201.0" />
+            <TextField fx:id="txtFiltrarNombre" layoutX="183.0" layoutY="22.0" prefHeight="25.0" prefWidth="201.0" />
+            <AnchorPane layoutX="14.0" layoutY="69.0" prefHeight="454.0" prefWidth="319.0" style="-fx-background-color: rgba(33, 255, 229, 0.46);">
+               <children>
+                      <TableView fx:id="tabEmpresas" prefHeight="454.0" prefWidth="319.0" stylesheets="@css/estilos.css" visible="false">
+                          <columns>
+                              <TableColumn fx:id="colCodigo" editable="false" prefWidth="82.0" resizable="false" styleClass="columna-tabla" text="Codigo" />
+                              <TableColumn fx:id="colNombre" editable="false" prefWidth="121.0" resizable="false" styleClass="columna-tabla" text="Nombre" />
+                              <TableColumn fx:id="colConsulta" editable="false" prefWidth="38.0" resizable="false" sortable="false" styleClass="columna-tabla" />
+                              <TableColumn fx:id="colModifica" editable="false" minWidth="9.0" prefWidth="38.0" resizable="false" sortable="false" styleClass="columna-tabla" />
+                              <TableColumn fx:id="colElimina" editable="false" minWidth="7.0" prefWidth="38.0" resizable="false" sortable="false" styleClass="columna-tabla" />
+                          </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                      </TableView>
+                  <Label fx:id="lbNoEmpresas" layoutX="54.0" layoutY="206.0" text="Actualmente no hay empresas&#10;añada una para verla&#10;" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold Italic" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
             </children>
         </AnchorPane>
     </children>
