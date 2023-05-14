@@ -37,6 +37,9 @@
 .list-view {
     -fx-font-size: 16px;
 }
+.lv-alumnos {
+    -fx-font-size: 13px;
+}
 .text-field:disabled {
     -fx-opacity: 0.8;
     -fx-font-style: italic;

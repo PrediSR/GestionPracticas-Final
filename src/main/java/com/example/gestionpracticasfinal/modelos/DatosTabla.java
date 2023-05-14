@@ -26,7 +26,8 @@ public class DatosTabla {
         col4 = a.email;
     }
 
-    public DatosTabla(Alumno a, EventHandler<MouseEvent> eModifica) {
+    public DatosTabla(Alumno a, EventHandler<MouseEvent> eConsulta, EventHandler<MouseEvent> eModifica,
+                      EventHandler<MouseEvent> eElimina) {
         col1 = a.nombre;
         col2 = a.getApellidos();
         try {
@@ -34,9 +35,9 @@ public class DatosTabla {
         } catch (Exception e) {
             col3 = "Error, idCiclo: " + a.getIdCiclo();
         }
-        inicializaConsulta(event -> {});
+        inicializaConsulta(eConsulta);
         inicializaModifica(eModifica);
-        inicializaElimina(event -> {});
+        inicializaElimina(eElimina);
     }
 
     public DatosTabla(Empresa emp, EventHandler<MouseEvent> cons, EventHandler<MouseEvent> modf,

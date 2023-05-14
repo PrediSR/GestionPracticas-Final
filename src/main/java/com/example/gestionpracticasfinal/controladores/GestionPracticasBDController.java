@@ -132,24 +132,6 @@ public class GestionPracticasBDController {
         return output;
     }
 
-    //metodo que devuelve cuantos alumnos hay en un ciclo pasando la id del ciclo
-    public static int numAlumnosEnCiclo(int id) throws Exception {
-        //preparacion de la consulta
-        String consulta = "select count(*) from alumno where id_ciclo = ?;";
-        PreparedStatement ps = conexion.prepareStatement(consulta);
-        ps.setInt(1, id);
-
-        //se  ejecuta la consulta y se recoge el resultado
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        int num = rs.getInt(1);
-
-        //se cierran rs y ps y se devuelve el numero devuelto por la consulta
-        rs.close();
-        ps.close();
-        return num;
-    }
-
     //metodo para insertar alumnos en la tabla de alumnos pasandole un alumno
     public static boolean insertarAlumno(Alumno a) throws Exception {
         //variable que determina la salida con las filas afectadas
@@ -222,17 +204,48 @@ public class GestionPracticasBDController {
     }
 
     //metodo que recibe un nombre y la id de un ciclo para buscar alumnos que coincidan en la tabla
-    public static Alumno[] consultaBuscaAlumnos(String nombre, int idC) throws Exception {
-        //se prepara la consulta
-        String consulta = "select id, nombre, apellidos, telefono, email from alumno where nombre like ? and id_ciclo = ?;";
+    public static Alumno[] consultaBuscaAlumnos(String nombre, String apellidos, String ciclo) throws Exception {
+        ArrayList<Alumno> lista = new ArrayList<>();
+        int id_ciclo = consultaIdCiclo(ciclo), posApe = 1, posCiclo = 1;
+        String consulta = consultaBusqueda(nombre, apellidos, id_ciclo);
         PreparedStatement ps = conexion.prepareStatement(consulta);
-        ps.setString(1, "%" + nombre + "%");
-        ps.setInt(2, idC);
-        //se ejecuta la consulta
+
+        if (nombre != null) {
+            ps.setString(1, "%" + nombre + "%");
+            posApe++;
+            posCiclo++;
+        }
+        if (apellidos != null) {
+            ps.setString(posApe, "%" + apellidos + "%");
+            posCiclo++;
+        }
+        if (ciclo != null) {
+            ps.setInt(posCiclo, id_ciclo);
+        }
         ResultSet rs = ps.executeQuery();
 
-        //se devuelve el resultado de llamar a getalumnos pasandole el resulset, idC y ps
-        return getAlumnos(idC, ps, rs);
+        while (rs.next()) {
+            lista.add(new Alumno(rs.getInt(1), rs.getString(2), rs.getString(3),
+                    rs.getString(4), rs.getString(5), rs.getInt(6)));
+        }
+        Alumno[] out = new Alumno[lista.size()];
+        out = lista.toArray(out);
+
+        ps.close();
+        rs.close();
+        return out;
+    }
+
+    private static String consultaBusqueda(String nombre, String apellidos, int ciclo) {
+        String out = "select * from alumno where ";
+        out = nombre != null ? out.concat("nombre like ?") : out;
+        out = nombre != null && apellidos != null || nombre != null && ciclo != -10 ?
+                out.concat(" and ") : out;
+        out = apellidos != null ? out.concat("apellidos like ?") : out;
+        out = apellidos != null && ciclo != -10 ? out.concat(" and ") : out;
+        out = ciclo != -10 ? out.concat("id_ciclo = ?") : out;
+        out = out.concat(";");
+        return out;
     }
 
     //devuelve todos los alumnos que pertenezcan a un ciclo
@@ -294,10 +307,26 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    public static int ultimaId() throws SQLException {
+        int out = -1;
+        String consulta = "select last_insert_id();";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(consulta);
+
+        while (rs.next()) {
+            out = rs.getInt(1);
+        }
+
+        rs.close();
+        st.close();
+        return out;
+    }
+
     //metodo que actualiza un alumno de la tabla alumnos pasandole un objeto alumno
     public static boolean actualizaAlumno(Alumno a) throws Exception {
+        boolean out = false;
         //se prepara la consulta
-        String consulta = "update alumno set nombre = ?, apellidos = ?, telefono = ?, email = ? where id = ?;";
+        String consulta = "update alumno set nombre = ?, apellidos = ?, telefono = ?, email = ?, id_ciclo = ? where id = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
 
         ps.setString(1, a.getNombre());
@@ -305,43 +334,43 @@ public class GestionPracticasBDController {
         ps.setString(3, a.getTelefono());
         ps.setString(4, a.getEmail());
         //el alumno que se pase tendra la misma id que la fila a modificar de la tabla
-        ps.setInt(5, a.getId());
+        ps.setInt(5, a.getIdCiclo());
+        ps.setInt(6, a.getId());
         //variable de salida que devuelve true si se pudo modificar una fila
-        boolean out = ps.executeUpdate() > 0;
-
+        try {
+            out = ps.executeUpdate() > 0;
+        }catch (Exception ignored) {}
         //se cierra ps y devuelve out
         ps.close();
         return out;
     }
 
     //metodo que elimina un alumno pasando su id
-    public static boolean eliminaAlumno(int id) throws Exception {
+    public static void eliminaAlumno(int id) throws Exception {
         //se prepara la consulta
         String consulta = "delete from alumno where id = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
 
         ps.setInt(1, id);
         //se guarda si hubo cambios en la tabla
-        boolean out = ps.executeUpdate() > 0;
+        ps.executeUpdate();
 
         //se cierra ps y devuelve out
         ps.close();
-        return out;
     }
 
     //metodo para insertar una empresa en la tabla de empresas pasando un objeto de la clase
-    public static boolean insertarEmpresa(Empresa e) throws Exception {
+    public static void insertarEmpresa(Empresa e) throws Exception {
         //se prepara la consulta
         String consulta = "insert into empresa values (default, ?, ?, ?, ?, ?);";
         PreparedStatement ps = conexion.prepareStatement(consulta);
         //llamada a metodo que insertara los datos de la empresa en la consulta
         setAtributosEmpresa(e, ps);
         //se ejecuta la consulta y se guarda en out si pudo realizar la insercion
-        boolean out = ps.executeUpdate() > 0;
+        ps.executeUpdate();
 
         //se cierra ps y se devuelve out
         ps.close();
-        return out;
     }
 
     //metodo que devuelve un array con todas las empresas de la tabla
@@ -355,6 +384,40 @@ public class GestionPracticasBDController {
         Empresa[] out = getEmpresas(rs);
         //se cierra st y se devuelve el array
         st.close();
+        return out;
+    }
+
+    public static Empresa consultaEmpresa(String nombre) throws Exception {
+        Empresa out = null;
+        String consulta = "select id, persona_contacto, telefono, email, direccion from empresa where nombre = ?";
+        PreparedStatement ps = conexion.prepareStatement(consulta);
+        ps.setString(1, nombre);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            out = new Empresa(rs.getInt(1), nombre, rs.getString(2),
+                    rs.getString(3), rs.getString(4), rs.getString(5));
+        }
+
+        ps.close();
+        rs.close();
+        return out;
+    }
+
+    public static Empresa consultaEmpresa(int id) throws Exception {
+        Empresa out = null;
+        String consulta = "select nombre, persona_contacto, telefono, email, direccion from empresa where id = ?";
+        PreparedStatement ps = conexion.prepareStatement(consulta);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            out = new Empresa(id, rs.getString(1), rs.getString(2),
+                    rs.getString(3), rs.getString(4), rs.getString(5));
+        }
+
+        ps.close();
+        rs.close();
         return out;
     }
 
@@ -408,7 +471,7 @@ public class GestionPracticasBDController {
     }
 
     //metodo que actualiza una empresa pasandole un objeto empresa
-    public static boolean actualizaEmpresa(Empresa e) throws Exception {
+    public static void actualizaEmpresa(Empresa e) throws Exception {
         //se prepara la consulta
         String consulta = "update empresa set nombre = ?, persona_contacto = ?, telefono = ?, email = ?, direccion = ? " +
                 "where id = ?;";
@@ -418,11 +481,10 @@ public class GestionPracticasBDController {
         //se hace set de la id
         ps.setInt(6, e.getId());
         //se guarda en out si hubo filas afectadas
-        boolean out = ps.executeUpdate() > 0;
+        ps.executeUpdate();
 
         //se cierra el ps y devuelve out
         ps.close();
-        return out;
     }
 
     // metodo que pasando un objeto empresa y un prepared statement se setean los atributos en las posiciones
@@ -435,17 +497,76 @@ public class GestionPracticasBDController {
     }
 
     //metodo que elimina una empresa pasandole un id
-    public static boolean eliminaEmpresa(int id) throws Exception {
+    public static void eliminaEmpresa(int id) throws Exception {
         //se prepara la consulta
         String consulta = "delete from empresa where id = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
 
         ps.setInt(1, id);
         //se guarda si hubo cambios en la tabla en out
-        boolean out = ps.executeUpdate() > 0;
+        ps.executeUpdate();
 
         //se cierra ps y se devuelve out
         ps.close();
+    }
+
+    public static void insertarPracticas(Practica p) throws SQLException {
+        String consulta = "insert into practicas_alumno values (?, ?, ?, ?, ?, ?);";
+        PreparedStatement ps = conexion.prepareStatement(consulta);
+
+        ps.setInt(1,p.getId_alumno());
+        ps.setInt(2,p.getId_empresa());
+        ps.setTime(3, Time.valueOf(p.gethEntrada()));
+        ps.setTime(4, Time.valueOf(p.gethSalida()));
+        ps.setDate(5, Date.valueOf(p.getfInicio()));
+        ps.setDate(6, Date.valueOf(p.getfFin()));
+
+        ps.executeUpdate();
+        ps.close();
+    }
+
+    public static Practica consultaPractica(int id) throws Exception {
+        Practica out = null;
+        String consulta = "select id_empresa, horario_Inicio, horario_Fin, f_Inicio, f_Fin from practicas_alumno" +
+                " where id_alumno = ?";
+        PreparedStatement ps = conexion.prepareStatement(consulta);
+        ps.setInt(1,id);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            out = new Practica(id, rs.getInt(1), rs.getTime(2).toLocalTime(),
+                    rs.getTime(3).toLocalTime(), rs.getDate(4).toLocalDate(),
+                    rs.getDate(5).toLocalDate());
+        }
+
+        ps.close();
+        rs.close();
         return out;
+    }
+
+    public static void eliminaPractica(int id) throws Exception {
+        String consulta = "delete from practicas_alumno where id_alumno = ?";
+        PreparedStatement ps = conexion.prepareStatement(consulta);
+        ps.setInt(1,id);
+
+        ps.executeUpdate();
+
+        ps.close();
+    }
+
+    public static void actualizaPractica(Practica p) throws Exception {
+        String consulta = "update practicas_alumno set id_empresa = ?, horario_Inicio = ?, horario_Fin = ?, " +
+                "f_Inicio = ?, f_Fin = ? where id_alumno = ?";
+        PreparedStatement ps = conexion.prepareStatement(consulta);
+
+        ps.setInt(1, p.getId_empresa());
+        ps.setTime(2, Time.valueOf(p.gethEntrada()));
+        ps.setTime(3, Time.valueOf(p.gethSalida()));
+        ps.setDate(4, Date.valueOf(p.getfInicio()));
+        ps.setDate(5, Date.valueOf(p.getfFin()));
+        ps.setInt(6, p.getId_alumno());
+        ps.executeUpdate();
+
+        ps.close();
     }
 }

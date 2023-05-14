@@ -84,7 +84,8 @@ public class EmpresasViewController implements Initializable {
             Empresa[] lista = GestionPracticasBDController.consultaEmpresas();
             tabEmpresas.setItems(getEmpresasTabla(lista));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            MensajeBoxController.alertError("ERROR DB",
+                    "Hubo un error de conexion con la base de datos");
         }
     }
 
@@ -94,7 +95,7 @@ public class EmpresasViewController implements Initializable {
         lbNoEmpresas.setVisible(!visible);
     }
 
-    public ObservableList<DatosTabla> getEmpresasTabla(Empresa[] lista) throws Exception {
+    public ObservableList<DatosTabla> getEmpresasTabla(Empresa[] lista) {
         tabEmpresas.getItems().clear();
         ObservableList<DatosTabla> output = FXCollections.observableArrayList();
         for (Empresa emp : lista) {
@@ -128,26 +129,35 @@ public class EmpresasViewController implements Initializable {
 
     public EventHandler<MouseEvent> eliminaEmpresa(Empresa emp) {
         return event -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("ELIMINAR EMPRESA");
-            alert.setContentText("Esta totalmente seguro de que desea eliminar la empresa " + emp.getNombre());
-            alert.setHeaderText(null);
-            alert.showAndWait();
-            if (alert.getResult() == ButtonType.OK)  {
+            ButtonType r = MensajeBoxController.alertConfirmar("ELIMINAR EMPRESA",
+                    "Esta totalmente seguro de que desea eliminar la empresa " + emp.getNombre() + "?");
+            if (r == ButtonType.OK)  {
                 try {
                     GestionPracticasBDController.eliminaEmpresa(emp.getId());
                     muestraTodasEmpresasTabla();
                     tablaVisible();
-                    reiniciaDatosRellenar();
+                    if (modificado != null && modificado.equals(emp)) {
+                        reiniciaDatosRellenar();
+                    } else if (lbTituloAccion.getText().equals("Ver Empresa")) {
+                        Empresa aux = new Empresa(0, txtNombreEmpresa.getText(), txtContactoEmpresa.getText(),
+                                txtNumTel.getText(), txtEmailEmpresa.getText(), txtDireccion.getText());
+                        if (aux.equals(emp)) {
+                            reiniciaDatosRellenar();
+                        } else {
+                            quitaFiltros();
+                        }
+                    } else {
+                        quitaFiltros();
+                    }
                 } catch (Exception e) {
-                    alertError("ERROR BD",
+                    MensajeBoxController.alertError("ERROR BD",
                             "Hubo un error con la base de datos al eliminar la empresa");
                 }
             }
         };
     }
 
-    public void onClickReinicia(MouseEvent e) {
+    public void onClickReinicia(MouseEvent event) {
         reiniciaDatosRellenar();
     }
 
@@ -158,9 +168,13 @@ public class EmpresasViewController implements Initializable {
         btnGuardar.setVisible(true);
         btnCancelar.setVisible(true);
         txtDatosDisable(false);
+        quitaFiltros();
+        modificado = null;
+    }
+
+    private void quitaFiltros() {
         cbFiltrarNombre.setSelected(false);
         txtFiltrarNombre.setText("");
-        modificado = null;
     }
 
     public void setTxtDatosEmpresa(Empresa emp) {
@@ -190,7 +204,7 @@ public class EmpresasViewController implements Initializable {
                     tablaVisible();
                     reiniciaDatosRellenar();
                 }catch (Exception e) {
-                    alertaWarning("EMPRESA REPETIDA",
+                    MensajeBoxController.alertWarning("EMPRESA REPETIDA",
                             "La empresa no fue añadida, el nombre ya existe en la lista de empresas");
                 }
             } else {
@@ -200,7 +214,7 @@ public class EmpresasViewController implements Initializable {
                         GestionPracticasBDController.actualizaEmpresa(emp);
                         muestraTodasEmpresasTabla();
                     }catch (Exception e) {
-                        alertError("ERROR BD",
+                        MensajeBoxController.alertError("ERROR BD",
                                 "Hubo un error con la base de datos al modificar la empresa");
                     }
                 }
@@ -210,37 +224,21 @@ public class EmpresasViewController implements Initializable {
             if (emp.isRellenoNomConDir() && !txtNumTel.getText().equals("") && !txtEmailEmpresa.getText().equals("")) {
                 telefonoEmailCorrecto(emp);
             } else {
-                alertaWarning("COMPLETE TODOS LOS CAMPOS",
+                MensajeBoxController.alertWarning("COMPLETE TODOS LOS CAMPOS",
                         "Faltan datos por rellenar para poder guardar la empresa");
             }
 
         }
     }
 
-    private static void alertError(String titulo, String texto) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setContentText(texto);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-    }
-
-    public static void alertaWarning(String titulo, String texto) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setContentText(texto);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-    }
-
     public void telefonoEmailCorrecto(Empresa empresa) {
         if (!Contactable.telCorrecto(empresa.getTelefono())) {
-            alertaWarning("TELEFONO NO VALIDO",
+            MensajeBoxController.alertWarning("TELEFONO NO VALIDO",
                     "Introduzca un número de telefono valido (9 numeros, pueden estar separados" +
                             " por espacios, guiones o puntos)");
         }
         if (!Contactable.emailCorrecto(empresa.getEmail())) {
-            alertaWarning("CORREO NO VALIDO",
+            MensajeBoxController.alertWarning("CORREO NO VALIDO",
                     "El correo electronico debe tener 1 '@'");
         }
     }
@@ -273,7 +271,7 @@ public class EmpresasViewController implements Initializable {
                 muestraTodasEmpresasTabla();
             }
         }catch (Exception e) {
-            alertError("ERROR BD", "Hubo un error de conexion con la base de datos");
+            MensajeBoxController.alertError("ERROR BD", "Hubo un error de conexion con la base de datos");
         }
     }
 
@@ -293,7 +291,7 @@ public class EmpresasViewController implements Initializable {
                 muestraTodasEmpresasTabla();
             }
         }catch (Exception e) {
-            alertError("ERROR DB", "Hubo un error con la base de datos" +
+            MensajeBoxController.alertError("ERROR DB", "Hubo un error con la base de datos" +
                     " al filtrar las empresas");
         }
     }

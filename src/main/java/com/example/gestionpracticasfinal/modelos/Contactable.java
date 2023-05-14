@@ -116,4 +116,12 @@ public class Contactable {
 
         return cuentaArrobas == 1 && email.indexOf(' ') == -1 && email.length() <= 40;
     }
+
+    public static String[] contactableArrayNombres(Contactable[] cont) {
+        String[] out = new String[cont.length];
+        for (int i = 0; i < cont.length; i++) {
+            out[i] = cont[i].getNombre();
+        }
+        return out;
+    }
 }

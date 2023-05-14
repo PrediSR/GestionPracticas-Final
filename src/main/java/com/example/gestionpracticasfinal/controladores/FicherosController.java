@@ -4,7 +4,6 @@ import com.example.gestionpracticasfinal.modelos.Alumno;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 public class FicherosController {
     public static void escribirCiclo(File file, Alumno[] lista) throws Exception {

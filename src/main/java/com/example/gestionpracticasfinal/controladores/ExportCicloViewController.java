@@ -65,13 +65,6 @@ public class ExportCicloViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         inicializaTabla();
         inicializaCombCiclos();
-        editor = combCiclo.getEditor();
-        editor.setOnKeyReleased(this::configuraBusquedaComb);
-        editor.setOnMouseClicked(event -> {
-            lvCombCiclos.setVisible(true);
-            btnExportar.toBack();
-
-        });
     }
 
     private void configuraBusquedaComb(KeyEvent event) {
@@ -123,13 +116,15 @@ public class ExportCicloViewController implements Initializable {
             }
             lvCombCiclos.setItems(combCiclo.getItems());
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error al consultar");
-            alert.setContentText("Hubo un error con la base de datos y no " +
-                    "pudo realizarse la consulta de ciclos");
-            alert.setHeaderText(null);
-            alert.showAndWait();
+            MensajeBoxController.alertError("Error al consultar",
+                    "Hubo un error con la base de datos y no pudo realizarse la consulta de ciclos");
         }
+        editor = combCiclo.getEditor();
+        editor.setOnKeyReleased(this::configuraBusquedaComb);
+        editor.setOnMouseClicked(event -> {
+            lvCombCiclos.setVisible(true);
+            btnExportar.toBack();
+        });
     }
 
     private void inicializaTabla() {
@@ -166,12 +161,8 @@ public class ExportCicloViewController implements Initializable {
                 quitaTabla();
             }
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error al consultar el ciclo");
-            alert.setContentText("No se ha podido hacer la consulta de alumnos" +
-                    " que se exportaran");
-            alert.setHeaderText(null);
-            alert.showAndWait();
+            MensajeBoxController.alertError("Error al consultar el ciclo",
+                    "No se ha podido hacer la consulta de alumnos que se exportaran");
         }
 
     }
@@ -201,12 +192,8 @@ public class ExportCicloViewController implements Initializable {
                 lista.add("No hay ciclos añadidos");
             }
         }catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("ERROR CONEXION BD");
-            alert.setContentText("Hubo un error con la base de datos y no se pudo" +
-                    " consultar los ciclos");
-            alert.showAndWait();
+            MensajeBoxController.alertError("ERROR CONEXION BD",
+                    "Hubo un error con la base de datos y no se pudo consultar los ciclos");
         }
 
         return lista;
@@ -235,29 +222,17 @@ public class ExportCicloViewController implements Initializable {
                 try {
                     Alumno[] lista = GestionPracticasBDController.consultaAlumnosPorNombreCiclo(ciclo);
                     FicherosController.escribirCiclo(file, lista);
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setHeaderText(null);
-                    alert.setTitle("CICLO EXPORTADO");
-                    alert.setContentText("El ciclo seleccionado fue exportado correctamente");
-                    alert.showAndWait();
-
+                    MensajeBoxController.alertInformation("CICLO EXPORTADO",
+                            "El ciclo seleccionado fue exportado correctamente");
                     reiniciaSeleccion();
                 } catch (Exception e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setHeaderText(null);
-                    alert.setTitle("ERROR AL EXPORTAR");
-                    alert.setContentText("Hubo un error al exportar el ciclo y no pudo " +
-                            "crearse el fichero");
-                    alert.showAndWait();
+                    MensajeBoxController.alertError("ERROR AL EXPORTAR",
+                            "Hubo un error al exportar el ciclo y no pudo crearse el fichero");
                 }
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText(null);
-            alert.setTitle("CICLO NO VALIDO");
-            alert.setContentText("El ciclo seleccionado no tiene alumnos para exportar" +
-                    " a un fichero");
-            alert.showAndWait();
+            MensajeBoxController.alertWarning("CICLO NO VALIDO",
+                    "El ciclo seleccionado no tiene alumnos para exportar a un fichero");
         }
     }
 

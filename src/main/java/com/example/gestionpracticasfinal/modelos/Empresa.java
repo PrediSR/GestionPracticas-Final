@@ -7,6 +7,11 @@ public class Empresa extends Contactable {
 
     //constructor vacio
     public Empresa() {
+        telefono = "";
+        email = "";
+        nombre = "";
+        personaContacto = "";
+        direccion = "";
     }
 
     //constructor que pide todos los atributos
