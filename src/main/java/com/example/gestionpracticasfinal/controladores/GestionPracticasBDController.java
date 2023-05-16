@@ -166,7 +166,7 @@ public class GestionPracticasBDController {
         //variable que recogera el resultado
         String out;
         //consulta a realizar
-        String consulta = "call generaEmail(?, ?, ?, 'cieep.com', ?)";
+        String consulta = "call generaEmail(?, ?, ?, 'cieep.com', ?);";
         //se guarda en un callablestatement la preparacion de la llamada al procedimiento
         CallableStatement cs = conexion.prepareCall(consulta);
 
@@ -189,7 +189,7 @@ public class GestionPracticasBDController {
         //variable que sera devuelta
         boolean out;
         //se prepara la consulta
-        String consulta = "select existeCorreo(?)";
+        String consulta = "select existeCorreo(?);";
         PreparedStatement ps = conexion.prepareStatement(consulta);
 
         ps.setString(1, email);
@@ -383,7 +383,7 @@ public class GestionPracticasBDController {
     //metodo que devuelve un array con todas las empresas de la tabla
     public static Empresa[] consultaEmpresas() throws Exception {
         //realizacion de la consulta y guardar el resultado en un resulset
-        String consulta = "select * from empresa";
+        String consulta = "select * from empresa;";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(consulta);
 
@@ -397,7 +397,7 @@ public class GestionPracticasBDController {
     //metodo que consulta una empresa por su nombre
     public static Empresa consultaEmpresa(String nombre) throws Exception {
         Empresa out = null;
-        String consulta = "select id, persona_contacto, telefono, email, direccion from empresa where nombre = ?";
+        String consulta = "select id, persona_contacto, telefono, email, direccion from empresa where nombre = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
         ps.setString(1, nombre);
         ResultSet rs = ps.executeQuery();
@@ -415,7 +415,7 @@ public class GestionPracticasBDController {
     //metodo que consulta una empresa por su id
     public static Empresa consultaEmpresa(int id) throws Exception {
         Empresa out = null;
-        String consulta = "select nombre, persona_contacto, telefono, email, direccion from empresa where id = ?";
+        String consulta = "select nombre, persona_contacto, telefono, email, direccion from empresa where id = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
@@ -433,7 +433,7 @@ public class GestionPracticasBDController {
     //metodo que devuelve cuantas empresas hay en total
     public static int numEmpresas() throws Exception {
         //realizacion de la consulta y guardado de resultado
-        String consulta = "select count(*) from empresa";
+        String consulta = "select count(*) from empresa;";
         Statement st = conexion.createStatement();
         ResultSet rs = st.executeQuery(consulta);
 
@@ -450,7 +450,7 @@ public class GestionPracticasBDController {
     //metodo que devuelve un array de empresas que coincidan con el nombre pasado como parametro
     public static Empresa[] consultaBuscaEmpresas(String nombre) throws Exception {
         //se prepara la consulta
-        String consulta = "select * from empresa where nombre like ?";
+        String consulta = "select * from empresa where nombre like ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
         ps.setString(1, "%" + nombre + "%");
         //se guarda resultados
@@ -539,7 +539,7 @@ public class GestionPracticasBDController {
     public static Practica consultaPractica(int id) throws Exception {
         Practica out = null;
         String consulta = "select id_empresa, horario_Inicio, horario_Fin, f_Inicio, f_Fin from practicas_alumno" +
-                " where id_alumno = ?";
+                " where id_alumno = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
         ps.setInt(1,id);
         ResultSet rs = ps.executeQuery();
@@ -557,7 +557,7 @@ public class GestionPracticasBDController {
 
     //metodo que elimina practicas pasandole una id
     public static void eliminaPractica(int id) throws Exception {
-        String consulta = "delete from practicas_alumno where id_alumno = ?";
+        String consulta = "delete from practicas_alumno where id_alumno = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
         ps.setInt(1,id);
 
@@ -569,7 +569,7 @@ public class GestionPracticasBDController {
     //metodo que modifica unas practicas en la bd pasandole un objeto practicas
     public static void actualizaPractica(Practica p) throws Exception {
         String consulta = "update practicas_alumno set id_empresa = ?, horario_Inicio = ?, horario_Fin = ?, " +
-                "f_Inicio = ?, f_Fin = ? where id_alumno = ?";
+                "f_Inicio = ?, f_Fin = ? where id_alumno = ?;";
         PreparedStatement ps = conexion.prepareStatement(consulta);
 
         ps.setInt(1, p.getId_empresa());
