@@ -56,6 +56,14 @@ public class MensajeBoxController {
         td.setTitle(titulo);
         td.setContentText(texto);
         td.setHeaderText(null);
-        return td.showAndWait();
+        Optional<String> r = td.showAndWait();
+        if (r.isPresent()) {
+            if (r.get().length() > 50) {
+                alertWarning("DEMASIADOS CARACTERES",
+                        "El texto introducido acepta como maximo 50 caracteres");
+                return Optional.empty();
+            }
+        }
+        return r;
     }
 }
