@@ -57,15 +57,18 @@ public class Empresa extends Contactable {
         }
     }
 
+    //metodo que comprueba que todos los atributos tengan un valor menos la id
     public boolean isTodoRellenoMenosId() {
         return telefono != null && !telefono.equals("") && email != null && !email.equals("") && isRellenoNomConDir();
     }
 
+    //metodo que comprueba si nombre contacto y direccion fueron rellenados
     public boolean isRellenoNomConDir() {
         return nombre != null && !nombre.equals("") && personaContacto != null && !personaContacto.equals("") &&
                 direccion != null && !direccion.equals("");
     }
 
+    //override del metodo equals, comprueba si 2 empresas son iguales mediante todos sus atributos menos la id
     @Override
     public boolean equals(Object obj) {
         Empresa e;

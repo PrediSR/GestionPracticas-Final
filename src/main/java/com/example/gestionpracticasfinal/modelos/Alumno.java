@@ -62,9 +62,24 @@ public class Alumno extends Contactable{
         this.idCiclo = idCiclo;
     }
 
-    //override del to string que separa los atributos con /
+    //override del to string que separa los atributos con ; y poder exportarlos
     @Override
     public String toString() {
         return id + ";" + nombre + ";" + apellidos + ";" + telefono + ";" + email;
+    }
+
+    //override del equals para comparar si 2 alumnos son iguales por todos sus datos menos la id
+    @Override
+    public boolean equals(Object obj) {
+        Alumno a;
+
+        if (obj instanceof Alumno) {
+            a = (Alumno) obj;
+
+            return nombre.equalsIgnoreCase(a.nombre) && apellidos.equalsIgnoreCase(a.apellidos) &&
+                    telefono.equals(a.telefono) && email.equalsIgnoreCase(a.email) && idCiclo == a.idCiclo;
+        }
+
+        return false;
     }
 }

@@ -65,6 +65,7 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    //metodo que devuelve un array de string con nombres de ciclos que sean similares al string pasado como argumento
     public static String[] buscaCiclosNombre(String nombre) throws Exception {
         ArrayList<String> lista = new ArrayList<>();
         String consulta = "select nombre from ciclo where nombre like ?;";
@@ -117,6 +118,7 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    //metodo para consultar el numero de ciclos que hay en la bd
     public static int numCiclos() throws Exception {
         int output = 0;
         String consulta = "select count(*) from ciclo;";
@@ -203,7 +205,8 @@ public class GestionPracticasBDController {
         return out;
     }
 
-    //metodo que recibe un nombre y la id de un ciclo para buscar alumnos que coincidan en la tabla
+    //metodo que segun los argumentos pasados filtra la consulta y devuelve un array de alumnos que coincidan con los
+    //datos
     public static Alumno[] consultaBuscaAlumnos(String nombre, String apellidos, String ciclo) throws Exception {
         ArrayList<Alumno> lista = new ArrayList<>();
         int id_ciclo = consultaIdCiclo(ciclo), posApe = 1, posCiclo = 1;
@@ -236,6 +239,8 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    //metodo auxiliar del anterior que concatena las partes de la consulta necesarias segun si algun argumento es
+    //null o no, o si ciclo es -10 o no
     private static String consultaBusqueda(String nombre, String apellidos, int ciclo) {
         String out = "select * from alumno where ";
         out = nombre != null ? out.concat("nombre like ?") : out;
@@ -261,6 +266,7 @@ public class GestionPracticasBDController {
         return getAlumnos(idC, ps, rs);
     }
 
+    //metodo que devuelve un array de los alumnos que pertenecen a un determinado ciclo
     public static Alumno[] consultaAlumnosPorNombreCiclo(String nombreC) throws Exception {
         int idC = consultaIdCiclo(nombreC);
         return consultaAlumnosPorIdCiclo(idC);
@@ -307,6 +313,7 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    //metodo que recoge la ultima id que fue insertada o modificada en la bd
     public static int ultimaId() throws SQLException {
         int out = -1;
         String consulta = "select last_insert_id();";
@@ -387,6 +394,7 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    //metodo que consulta una empresa por su nombre
     public static Empresa consultaEmpresa(String nombre) throws Exception {
         Empresa out = null;
         String consulta = "select id, persona_contacto, telefono, email, direccion from empresa where nombre = ?";
@@ -404,6 +412,7 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    //metodo que consulta una empresa por su id
     public static Empresa consultaEmpresa(int id) throws Exception {
         Empresa out = null;
         String consulta = "select nombre, persona_contacto, telefono, email, direccion from empresa where id = ?";
@@ -510,6 +519,7 @@ public class GestionPracticasBDController {
         ps.close();
     }
 
+    //metodo que recibidas unas practicas como argumento las inserta en la base de datos
     public static void insertarPracticas(Practica p) throws SQLException {
         String consulta = "insert into practicas_alumno values (?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = conexion.prepareStatement(consulta);
@@ -525,6 +535,7 @@ public class GestionPracticasBDController {
         ps.close();
     }
 
+    //metodo que consulta una practica pasandole la id del alumno al que le pertenecen
     public static Practica consultaPractica(int id) throws Exception {
         Practica out = null;
         String consulta = "select id_empresa, horario_Inicio, horario_Fin, f_Inicio, f_Fin from practicas_alumno" +
@@ -544,6 +555,7 @@ public class GestionPracticasBDController {
         return out;
     }
 
+    //metodo que elimina practicas pasandole una id
     public static void eliminaPractica(int id) throws Exception {
         String consulta = "delete from practicas_alumno where id_alumno = ?";
         PreparedStatement ps = conexion.prepareStatement(consulta);
@@ -554,6 +566,7 @@ public class GestionPracticasBDController {
         ps.close();
     }
 
+    //metodo que modifica unas practicas en la bd pasandole un objeto practicas
     public static void actualizaPractica(Practica p) throws Exception {
         String consulta = "update practicas_alumno set id_empresa = ?, horario_Inicio = ?, horario_Fin = ?, " +
                 "f_Inicio = ?, f_Fin = ? where id_alumno = ?";

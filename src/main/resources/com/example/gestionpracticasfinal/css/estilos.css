@@ -1,12 +1,15 @@
+/*clase para dar color cuando el raton esta sobre los elementos de la barra de navegacion de la aplicacion*/
 .elemento-menu:hover {
     -fx-background-color:  #88b4eb;
     -fx-cursor: hand;
 }
+/*Atributos comunes de las clases botones de las tablas*/
 .boton-modificar, .boton-eliminar, .boton-consultar {
     -fx-background-color: transparent;
     -fx-padding: 3 6;
     -fx-background-radius: 5em;
 }
+/*cada boton de la tabla tiene un color de hover diferente*/
 .boton-modificar:hover {
     -fx-background-color: #a4cfed;
 }
@@ -16,12 +19,15 @@
 .boton-consultar:hover {
     -fx-background-color: #9fe3b0;
 }
+/*Cuando se hace hover sobre los botones el cursor siempre tendra forma de mouse*/
 .boton-modificar:hover, .boton-eliminar:hover, .boton-consultar:hover {
     -fx-cursor: hand;
 }
+/*Clase para que las columnas de la tabla tengan el texto centrado*/
 .columna-tabla {
     -fx-alignment: CENTER;
 }
+/*Clases propias de javafx para que los elementos de la tabla no se estilicen al estar sobre ellos seleccionados*/
 .table-row-cell:filled:selected {
     -fx-background: -fx-control-inner-background ;
     -fx-background-color: -fx-table-cell-border-color, -fx-background ;
@@ -31,15 +37,15 @@
 .table-row-cell:odd:filled:selected {
     -fx-background: -fx-control-inner-background-alt ;
 }
-.comb-exportar-ciclo {
+/*font size para el combobox de exportar ciclos y su lista*/
+.comb-exportar-ciclo, .list-view {
     -fx-font-size: 16px;
 }
-.list-view {
-    -fx-font-size: 16px;
-}
+/*font size para la lista de combobox de ciclos de alumnos*/
 .lv-alumnos {
     -fx-font-size: 13px;
 }
+/*clase para estilizar un TextField cuando esta deshabilitado*/
 .text-field:disabled {
     -fx-opacity: 0.8;
     -fx-font-style: italic;
